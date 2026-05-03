@@ -12,9 +12,9 @@ export type ServeEvent =
   | { event: "error"; message: string };
 
 export interface ServeOptions {
-  cliPath: string;
-  sampleRate: number;
-  bufferSize: number;
+  getCliPath: () => string;
+  getSampleRate: () => number;
+  getBufferSize: () => number;
 }
 
 type EventHandler = (event: ServeEvent) => void;
@@ -50,14 +50,17 @@ export class ServeModeManager {
 
   private start(): boolean {
     if (this.proc) return true;
-    log(`Starting: ${this.opts.cliPath} serve --rate ${this.opts.sampleRate} --buffer ${this.opts.bufferSize}`);
+    const cliPath = this.opts.getCliPath();
+    const sampleRate = this.opts.getSampleRate();
+    const bufferSize = this.opts.getBufferSize();
+    log(`Starting: ${cliPath} serve --rate ${sampleRate} --buffer ${bufferSize}`);
     try {
-      this.proc = spawn(this.opts.cliPath, [
+      this.proc = spawn(cliPath, [
         "serve",
         "--rate",
-        String(this.opts.sampleRate),
+        String(sampleRate),
         "--buffer",
-        String(this.opts.bufferSize),
+        String(bufferSize),
       ]);
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
@@ -70,7 +73,10 @@ export class ServeModeManager {
     this.proc.stderr.on("data", (b: Buffer) => log(`[serve stderr] ${b.toString().trimEnd()}`));
     this.proc.on("error", (err) => {
       log(`serve process error: ${err.message}`);
-      vscode.window.showErrorMessage(`nkido-cli serve error: ${err.message}`);
+      const hint = err.message.includes("ENOENT")
+        ? `nkido-cli not found at "${cliPath}". Set "nkido.cliPath" in Settings to the absolute path of the binary.`
+        : `nkido-cli serve error: ${err.message}`;
+      vscode.window.showErrorMessage(hint);
       this.proc = null;
     });
     this.proc.on("exit", (code, signal) => {

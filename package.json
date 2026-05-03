@@ -70,9 +70,9 @@
     "keybindings": [
       {
         "command": "nkido.evaluate",
-        "key": "ctrl+enter",
-        "mac": "cmd+enter",
-        "when": "editorTextFocus && editorLangId == akkado"
+        "key": "shift+enter",
+        "mac": "shift+enter",
+        "when": "editorTextFocus && editorLangId == akkado && !suggestWidgetVisible && !inlineSuggestionVisible"
       },
       {
         "command": "nkido.stop",
@@ -100,8 +100,8 @@
         },
         "nkido.audio.bufferSize": {
           "type": "number",
-          "default": 128,
-          "description": "Audio buffer size (samples) passed to `nkido-cli serve`."
+          "default": 512,
+          "description": "Audio buffer size (samples) passed to `nkido-cli serve`. Smaller = lower latency but more risk of underruns/clicks, especially on HDMI sinks. Try 1024 if you hear clicks."
         },
         "nkido.diagnostics.enabled": {
           "type": "boolean",

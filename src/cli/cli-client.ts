@@ -15,11 +15,11 @@ export interface CheckResult {
  * Live playback goes through ServeModeManager.
  */
 export class CliClient {
-  constructor(private readonly cliPath: string) {}
+  constructor(private readonly getCliPath: () => string) {}
 
   async check(filePath: string): Promise<CheckResult> {
     return new Promise((resolve) => {
-      const proc = spawn(this.cliPath, ["check", filePath, "--json"]);
+      const proc = spawn(this.getCliPath(), ["check", filePath, "--json"]);
       let stderr = "";
       proc.stderr.on("data", (b: Buffer) => (stderr += b.toString()));
       proc.on("error", (err) => {
@@ -35,7 +35,7 @@ export class CliClient {
 
   async compile(filePath: string, outputPath: string): Promise<{ ok: boolean; stderr: string }> {
     return new Promise((resolve) => {
-      const proc = spawn(this.cliPath, ["compile", "-o", outputPath, filePath]);
+      const proc = spawn(this.getCliPath(), ["compile", "-o", outputPath, filePath]);
       let stderr = "";
       proc.stderr.on("data", (b: Buffer) => (stderr += b.toString()));
       proc.on("error", (err) => resolve({ ok: false, stderr: err.message }));

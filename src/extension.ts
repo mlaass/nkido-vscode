@@ -15,18 +15,32 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(channel);
   log("Nkido extension activated");
 
-  const config = readConfig();
   const diagnosticCollection = vscode.languages.createDiagnosticCollection(LANGUAGE_ID);
   context.subscriptions.push(diagnosticCollection);
 
-  const cliClient = new CliClient(config.cliPath);
+  const cliClient = new CliClient(() => readConfig().cliPath);
   serveManager = new ServeModeManager(
     {
-      cliPath: config.cliPath,
-      sampleRate: config.sampleRate,
-      bufferSize: config.bufferSize,
+      getCliPath: () => readConfig().cliPath,
+      getSampleRate: () => readConfig().sampleRate,
+      getBufferSize: () => readConfig().bufferSize,
     },
     diagnosticCollection,
+  );
+
+  // Restart serve when settings that affect the spawned process change so the
+  // user doesn't need to reload the window after pointing at a new binary.
+  context.subscriptions.push(
+    vscode.workspace.onDidChangeConfiguration((e) => {
+      if (
+        e.affectsConfiguration("nkido.cliPath") ||
+        e.affectsConfiguration("nkido.audio.sampleRate") ||
+        e.affectsConfiguration("nkido.audio.bufferSize")
+      ) {
+        log("nkido config changed; shutting down serve so next command respawns with new settings");
+        serveManager?.shutdown();
+      }
+    }),
   );
 
   // Surface notable serve events in the output channel.
@@ -64,18 +78,19 @@ export function activate(context: vscode.ExtensionContext) {
     ),
   );
 
-  // Optional: refresh diagnostics on save.
-  if (config.autoCompileOnSave) {
-    context.subscriptions.push(
-      vscode.workspace.onDidSaveTextDocument(async (doc) => {
-        if (doc.languageId !== LANGUAGE_ID) return;
-        const result = await cliClient.check(doc.uri.fsPath);
-        if (config.diagnosticsEnabled) {
-          diagnosticCollection.set(doc.uri, result.diagnostics);
-        }
-      }),
-    );
-  }
+  // Optional: refresh diagnostics on save. Read config on each save so toggling
+  // the setting takes effect without a window reload.
+  context.subscriptions.push(
+    vscode.workspace.onDidSaveTextDocument(async (doc) => {
+      if (doc.languageId !== LANGUAGE_ID) return;
+      const cfg = readConfig();
+      if (!cfg.autoCompileOnSave) return;
+      const result = await cliClient.check(doc.uri.fsPath);
+      if (cfg.diagnosticsEnabled) {
+        diagnosticCollection.set(doc.uri, result.diagnostics);
+      }
+    }),
+  );
 
   // Commands
   context.subscriptions.push(
@@ -128,7 +143,7 @@ export function activate(context: vscode.ExtensionContext) {
       const editor = vscode.window.activeTextEditor;
       if (!editor || editor.document.languageId !== LANGUAGE_ID) return;
       const result = await cliClient.check(editor.document.uri.fsPath);
-      if (config.diagnosticsEnabled) {
+      if (readConfig().diagnosticsEnabled) {
         diagnosticCollection.set(editor.document.uri, result.diagnostics);
       }
       if (result.ok) {
