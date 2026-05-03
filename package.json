@@ -1,0 +1,127 @@
+{
+  "name": "nkido",
+  "displayName": "Nkido (Akkado)",
+  "description": "Live-coding support for the Akkado language: syntax highlighting, autocomplete, diagnostics, hot-swap playback via nkido-cli.",
+  "version": "0.1.0",
+  "publisher": "moritzlaass",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Other"
+  ],
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "onLanguage:akkado"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "akkado",
+        "aliases": ["Akkado", "akkado"],
+        "extensions": [".akkado", ".akk"],
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./icons/akkado-light.svg",
+          "dark": "./icons/akkado-dark.svg"
+        }
+      }
+    ],
+    "grammars": [
+      {
+        "language": "akkado",
+        "scopeName": "source.akkado",
+        "path": "./syntaxes/akkado.tmLanguage.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "nkido.evaluate",
+        "title": "Nkido: Evaluate / Play",
+        "category": "Nkido"
+      },
+      {
+        "command": "nkido.stop",
+        "title": "Nkido: Stop",
+        "category": "Nkido"
+      },
+      {
+        "command": "nkido.compile",
+        "title": "Nkido: Compile to Bytecode",
+        "category": "Nkido"
+      },
+      {
+        "command": "nkido.check",
+        "title": "Nkido: Check Syntax",
+        "category": "Nkido"
+      },
+      {
+        "command": "nkido.showOutput",
+        "title": "Nkido: Show Output",
+        "category": "Nkido"
+      },
+      {
+        "command": "nkido.restartCli",
+        "title": "Nkido: Restart CLI",
+        "category": "Nkido"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "nkido.evaluate",
+        "key": "ctrl+enter",
+        "mac": "cmd+enter",
+        "when": "editorTextFocus && editorLangId == akkado"
+      },
+      {
+        "command": "nkido.stop",
+        "key": "escape",
+        "when": "editorTextFocus && editorLangId == akkado && !suggestWidgetVisible && !parameterHintsVisible"
+      }
+    ],
+    "configuration": {
+      "title": "Nkido",
+      "properties": {
+        "nkido.cliPath": {
+          "type": "string",
+          "default": "",
+          "description": "Absolute path to the nkido-cli executable. Leave empty to search PATH."
+        },
+        "nkido.autoCompileOnSave": {
+          "type": "boolean",
+          "default": false,
+          "description": "Run `nkido-cli check` automatically on save to refresh diagnostics."
+        },
+        "nkido.audio.sampleRate": {
+          "type": "number",
+          "default": 48000,
+          "description": "Audio sample rate (Hz) passed to `nkido-cli serve`."
+        },
+        "nkido.audio.bufferSize": {
+          "type": "number",
+          "default": 128,
+          "description": "Audio buffer size (samples) passed to `nkido-cli serve`."
+        },
+        "nkido.diagnostics.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show compiler errors as squiggly underlines and in the Problems panel."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run sync-builtins && npm run build:grammar && npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "sync-builtins": "node scripts/sync-builtins.js",
+    "build:grammar": "node scripts/build-grammar.js",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.0.0"
+  }
+}

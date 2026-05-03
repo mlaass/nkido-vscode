@@ -1,0 +1,138 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "scopeName": "source.akkado",
+  "fileTypes": [
+    "akkado",
+    "akk"
+  ],
+  "name": "Akkado",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#numbers"
+    },
+    {
+      "include": "#chord"
+    },
+    {
+      "include": "#directive"
+    },
+    {
+      "include": "#rest"
+    },
+    {
+      "include": "#hole"
+    },
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#builtins"
+    },
+    {
+      "include": "#operators"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "match": "//.*$",
+          "name": "comment.line.double-slash.akkado"
+        }
+      ]
+    },
+    "strings": {
+      "name": "string.quoted.double.akkado",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "match": "\\\\.",
+          "name": "constant.character.escape.akkado"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "match": "\\b\\d+\\.\\d+([eE][+-]?\\d+)?\\b",
+          "name": "constant.numeric.float.akkado"
+        },
+        {
+          "match": "\\.\\d+([eE][+-]?\\d+)?\\b",
+          "name": "constant.numeric.float.akkado"
+        },
+        {
+          "match": "\\b\\d+([eE][+-]?\\d+)?\\b",
+          "name": "constant.numeric.integer.akkado"
+        }
+      ]
+    },
+    "chord": {
+      "patterns": [
+        {
+          "match": "[A-Ga-g][#b]?[A-Za-z0-9_]*'",
+          "name": "string.other.chord.akkado"
+        }
+      ]
+    },
+    "directive": {
+      "patterns": [
+        {
+          "match": "\\$\\w+",
+          "name": "meta.preprocessor.akkado"
+        }
+      ]
+    },
+    "rest": {
+      "patterns": [
+        {
+          "match": "~",
+          "name": "constant.language.rest.akkado"
+        }
+      ]
+    },
+    "hole": {
+      "patterns": [
+        {
+          "match": "%(?![A-Za-z0-9_])",
+          "name": "variable.language.hole.akkado"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "match": "\\b(false|match|true|post|fn|as)\\b",
+          "name": "keyword.control.akkado"
+        }
+      ]
+    },
+    "builtins": {
+      "patterns": [
+        {
+          "match": "\\b(sqr_pwm_minblep|tap_delay_smp|env_follower|tap_delay_ms|oscilloscope|sqr_minblep|sample_loop|addVoicings|sqr_pwm_4x|saw_pwm_4x|aftertouch|palindrome|wavetable|sallenkey|soundfont|delay_smp|tap_delay|ms_encode|ms_decode|normalize|harmonics|transpose|pianoroll|waterfall|delay_ms|freeverb|dattorro|saturate|softclip|bitcrush|gatedown|pingpong|timeline|linspace|velocity|compress|iterBack|dropdown|waveform|spectrum|sqr_pwm|saw_pwm|wt_load|samples|formant|flanger|limiter|counter|trigger|zipWith|reverse|shuffle|compose|variant|segment|swingBy|binaryN|voicing|get_bpm|get_spb|phasor|smooch|sample|chorus|phaser|smooth|excite|select|gateup|stereo|euclid|reduce|repeat|rotate|legato|spread|random|scalar|linger|binary|anchor|button|toggle|get_sr|diode|delay|floor|atan2|clamp|noise|right|width|clock|state|range|scale|chord|value|early|swing|param|ramp|sine|moog|adsr|comb|fold|tube|tape|xfmr|comp|gate|sqrt|ceil|asin|acos|atan|sinh|cosh|tanh|wrap|band|bnot|mtof|slew|left|take|drop|mean|sort|poly|mono|note|slow|fast|bend|bank|tune|late|zoom|iter|mode|tri|saw|sqr|fdn|add|sub|mul|div|pow|neg|abs|log|exp|sin|cos|tan|min|max|gte|lte|neq|bor|sah|out|pan|lfo|len|get|set|map|sum|zip|pat|rev|dur|ply|run|wt|lp|hp|bp|ar|gt|lt|eq|in|dc|diodeladder|transformer|moogladder|compressor|envfollow|noisegate|highpass|bandpass|envelope|follower|wavefold|lowpass|distort|console|exciter|output|reverb|triode|svflp|svfhp|svfbp|tb303|vowel|plate|crush|valve|aural|limit|acid|ms20|room|adaa|sk)\\b",
+          "name": "support.function.builtin.akkado"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "match": "\\|>|->|==|!=|<=|>=|&&|\\|\\|",
+          "name": "keyword.operator.akkado"
+        },
+        {
+          "match": "[+\\-*/^=<>!?|.@]",
+          "name": "keyword.operator.akkado"
+        }
+      ]
+    }
+  }
+}

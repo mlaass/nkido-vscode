@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Placeholder icon: outline "A" over a sine waveform.
+       Replace with a finalized design before publishing. -->
+  <path d="M9 22 L16 8 L23 22 M11.6 17 H20.4"
+        stroke="#222" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M5 27 Q9 23 12 27 T19 27 T26 27"
+        stroke="#222" stroke-width="1.6" stroke-linecap="round" fill="none" opacity="0.55"/>
+</svg>
