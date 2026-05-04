@@ -13,7 +13,7 @@ Live-coding support for the [Akkado](https://github.com/) DSL: syntax highlighti
 
 ## Prerequisites
 
-You need a `nkido-cli` binary built with the `serve` subcommand. Build it from the [nkido repo](../nkido):
+You need a `nkido-cli` binary built with the `serve` subcommand. Build it from the [nkido repo](https://github.com/mlaass/nkido):
 
 ```sh
 cd /path/to/nkido
@@ -44,7 +44,7 @@ npm run vscode:prepublish
 
 To run the extension during development: open this folder in VS Code and press `F5`.
 
-To package: `npx vsce package`.
+To package: `npm run package` (produces a `.vsix`).
 
 ## Settings
 
