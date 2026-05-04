@@ -12,6 +12,7 @@
     "Other"
   ],
   "main": "./out/extension.js",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/mlaass/nkido-vscode.git"
@@ -84,6 +85,11 @@
         "when": "editorTextFocus && editorLangId == akkado && !suggestWidgetVisible && !parameterHintsVisible"
       }
     ],
+    "configurationDefaults": {
+      "[akkado]": {
+        "editor.fontLigatures": true
+      }
+    },
     "configuration": {
       "title": "Nkido",
       "properties": {
